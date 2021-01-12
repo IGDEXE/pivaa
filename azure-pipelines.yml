@@ -38,8 +38,8 @@ steps:
       # Descompacta a ferramenta
       unzip -o pipescan.zip -d "./"
       # Faz a analise
-      java -jar "pipeline-scan.jar" -f "$caminhoArquivo" -vid $veracodeID -vkey $veracodeAPIkey
-    workingDirectory: '$(system.defaultworkingdirectory)'
+      java -jar "pipeline-scan.jar" -f "pivaa.apk" -vid $veracodeID -vkey $veracodeAPIkey
+    workingDirectory: '$(system.defaultworkingdirectory)/apks'
   displayName: 'Pipeline Scan'
 - task: Bash@3
   inputs:
