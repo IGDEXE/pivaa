@@ -28,6 +28,23 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      # Configuracoes
+      urlPipeScan="https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip"
+      veracodeID="$(APIID)"
+      veracodeAPIkey="$(APIKEY)"
+      caminhoArquivo="$(caminhoAPK)"
+      
+      # Faz o download da ferramenta
+      curl -o pipescan.zip $urlPipeScan
+      # Descompacta a ferramenta
+      unzip -o pipescan.zip -d "./"
+      # Faz a analise
+      java -jar "pipeline-scan.jar" -f "$caminhoArquivo" -vid $veracodeID -vkey $veracodeAPIkey
+  displayName: 'Pipeline Scan'
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
       export SRCCLR_SCM_URI=$(Build.Repository.Uri)
       export SRCCLR_SCM_REF=$(Build.SourceBranch)
       export SRCCLR_SCM_REV=10
@@ -52,20 +69,3 @@ steps:
     failBuildOnPolicyFail: true
   displayName: 'SAST'
 
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: |
-      # Configuracoes
-      urlPipeScan="https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip"
-      veracodeID="$(APIID)"
-      veracodeAPIkey="$(APIKEY)"
-      caminhoArquivo="$(caminhoAPK)"
-      
-      # Faz o download da ferramenta
-      curl -o pipescan.zip $urlPipeScan
-      # Descompacta a ferramenta
-      unzip -o pipescan.zip -d "./"
-      # Faz a analise
-      java -jar "pipeline-scan.jar" -f "$caminhoArquivo" -vid $veracodeID -vkey $veracodeAPIkey
-  displayName: 'Pipeline Scan'
