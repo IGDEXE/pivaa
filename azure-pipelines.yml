@@ -33,13 +33,13 @@ steps:
       veracodeID="$(APIID)"
       veracodeAPIkey="$(APIKEY)"
       caminhoArquivo="$(caminhoAPK)"
-      
       # Faz o download da ferramenta
       curl -o pipescan.zip $urlPipeScan
       # Descompacta a ferramenta
       unzip -o pipescan.zip -d "./"
       # Faz a analise
       java -jar "pipeline-scan.jar" -f "$caminhoArquivo" -vid $veracodeID -vkey $veracodeAPIkey
+    workingDirectory: '$(system.defaultworkingdirectory)'
   displayName: 'Pipeline Scan'
 - task: Bash@3
   inputs:
