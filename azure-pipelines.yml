@@ -24,6 +24,34 @@ steps:
     gradleOptions: '-Xmx512m'
     sonarQubeRunAnalysis: false
 
+- task: Veracode@3
+  inputs:
+    ConnectionDetailsSelection: 'Credentials'
+    apiId: '$(APIID)'
+    apiKey: '$(APIKEY)'
+    veracodeAppProfile: 'IGDEXE.Pivaa'
+    version: '$(build.buildNumber)'
+    filepath: '$(caminhoAPK)'
+    createSandBox: false
+    createProfile: true
+    failTheBuildIfVeracodeScanDidNotInitiate: false
+    scanStatusCheckInterval: '60'
+    importResults: true
+    failBuildOnPolicyFail: true
+  displayName: 'SAST'
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      export SRCCLR_SCM_URI=$(Build.Repository.Uri)
+      export SRCCLR_SCM_REF=$(Build.SourceBranch)
+      export SRCCLR_SCM_REV=10
+      curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --allow-dirty
+      #curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan -url "https://github.com/IGDEXE/pivaa"
+    workingDirectory: '$(system.defaultworkingdirectory)'
+  displayName: 'SRCCLR'
+
 - task: Bash@3
   inputs:
     targetType: 'inline'
@@ -41,31 +69,3 @@ steps:
       java -jar "pipeline-scan.jar" -f "pivaa.apk" -vid $veracodeID -vkey $veracodeAPIkey
     workingDirectory: '$(system.defaultworkingdirectory)/apks'
   displayName: 'Pipeline Scan'
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: |
-      export SRCCLR_SCM_URI=$(Build.Repository.Uri)
-      export SRCCLR_SCM_REF=$(Build.SourceBranch)
-      export SRCCLR_SCM_REV=10
-      curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --allow-dirty
-      #curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan -url "https://github.com/IGDEXE/pivaa"
-    workingDirectory: '$(system.defaultworkingdirectory)'
-  displayName: 'SRCCLR'
-
-- task: Veracode@3
-  inputs:
-    ConnectionDetailsSelection: 'Credentials'
-    apiId: '$(APIID)'
-    apiKey: '$(APIKEY)'
-    veracodeAppProfile: 'IGDEXE.Pivaa'
-    version: '$(build.buildNumber)'
-    filepath: '$(caminhoAPK)'
-    createSandBox: false
-    createProfile: true
-    failTheBuildIfVeracodeScanDidNotInitiate: false
-    scanStatusCheckInterval: '60'
-    importResults: true
-    failBuildOnPolicyFail: true
-  displayName: 'SAST'
-
