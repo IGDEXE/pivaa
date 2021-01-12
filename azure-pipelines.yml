@@ -19,6 +19,14 @@ steps:
     gradleOptions: '-Xmx3072m'
     sonarQubeRunAnalysis: false
 
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      # curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan "$(Agent.BuildDirectory)" --allow-dirty
+      curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan -url "https://github.com/IGDEXE/pivaa"
+  displayName: 'SRCCLR'
+
 - task: Veracode@3
   inputs:
     ConnectionDetailsSelection: 'Credentials'
@@ -52,11 +60,3 @@ steps:
       # Faz a analise
       java -jar "pipeline-scan.jar" -f "$caminhoArquivo" -vid $veracodeID -vkey $veracodeAPIkey
   displayName: 'Pipeline Scan'
-
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: |
-      # curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan "$(Agent.BuildDirectory)" --allow-dirty
-      curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan -url "https://github.com/IGDEXE/pivaa"
-  displayName: 'SRCCLR'
