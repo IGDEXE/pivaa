@@ -31,7 +31,7 @@ steps:
     apiKey: '$(APIKEY)'
     veracodeAppProfile: 'IGDEXE.Pivaa'
     version: '$(build.buildNumber)'
-    filepath: '$(caminhoAPK)'
+    filepath: '$(system.defaultworkingdirectory)/apks/$(caminhoAPK)'
     createSandBox: false
     createProfile: true
     failTheBuildIfVeracodeScanDidNotInitiate: false
@@ -60,12 +60,11 @@ steps:
       urlPipeScan="https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip"
       veracodeID="$(APIID)"
       veracodeAPIkey="$(APIKEY)"
-      caminhoArquivo="$(caminhoAPK)"
       # Faz o download da ferramenta
       curl -o pipescan.zip $urlPipeScan
       # Descompacta a ferramenta
       unzip -o pipescan.zip -d "./"
       # Faz a analise
-      java -jar "pipeline-scan.jar" -f "pivaa.apk" -vid $veracodeID -vkey $veracodeAPIkey
+      java -jar "pipeline-scan.jar" -f "$(caminhoAPK)" -vid $veracodeID -vkey $veracodeAPIkey
     workingDirectory: '$(system.defaultworkingdirectory)/apks'
   displayName: 'Pipeline Scan'
