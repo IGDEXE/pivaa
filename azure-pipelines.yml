@@ -23,7 +23,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-       curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan "$(Build.ArtifactStagingDirectory)/**.apk"
+       curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan "$(caminhoAPK)"
       #curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan -url "https://github.com/IGDEXE/NodeGoat"
   displayName: 'SRCCLR'
 
@@ -34,7 +34,7 @@ steps:
     apiKey: '$(APIKEY)'
     veracodeAppProfile: 'IGDEXE.Pivaa'
     version: '$(build.buildNumber)'
-    filepath: '$(Build.ArtifactStagingDirectory)/**.apk'
+    filepath: '$(caminhoAPK)'
     createSandBox: false
     createProfile: true
     failTheBuildIfVeracodeScanDidNotInitiate: false
@@ -51,7 +51,7 @@ steps:
       urlPipeScan="https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip"
       veracodeID="$(APIID)"
       veracodeAPIkey="$(APIKEY)"
-      caminhoArquivo="**.apk"
+      caminhoArquivo="$(caminhoAPK)"
       
       # Faz o download da ferramenta
       curl -o pipescan.zip $urlPipeScan
@@ -59,5 +59,4 @@ steps:
       unzip -o pipescan.zip -d "./"
       # Faz a analise
       java -jar "pipeline-scan.jar" -f "$caminhoArquivo" -vid $veracodeID -vkey $veracodeAPIkey
-    workingDirectory: '$(Build.ArtifactStagingDirectory)'
   displayName: 'Pipeline Scan'
