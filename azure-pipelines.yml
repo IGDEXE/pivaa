@@ -26,7 +26,7 @@ steps:
       export SRCCLR_SCM_URI=$(Build.Repository.Uri)
       export SRCCLR_SCM_REF=$(Build.SourceBranch)
       export SRCCLR_SCM_REV=10
-      curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan "$(caminhoAPK)" --allow-dirty
+      curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --gradle --allow-dirty
       #curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan -url "https://github.com/IGDEXE/pivaa"
   displayName: 'SRCCLR'
 
