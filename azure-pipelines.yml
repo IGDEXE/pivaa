@@ -12,11 +12,11 @@ pool:
 steps:
 - task: Gradle@2
   inputs:
-    gradleWrapperFile: 'build.gradle'
+    gradleWrapperFile: './gradle/wrapper/gradle-wrapper.properties'
     tasks: 'assembleDebug'
     publishJUnitResults: false
     javaHomeOption: 'JDKVersion'
-    gradleOptions: '-Xmx3072m'
+    gradleOptions: '-Xmx512m'
     sonarQubeRunAnalysis: false
 
 - task: Bash@3
