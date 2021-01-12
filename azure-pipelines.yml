@@ -23,7 +23,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan "$(Agent.BuildDirectory)" --allow-dirty
+      curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --allow-dirty
       #curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan -url "https://github.com/IGDEXE/pivaa"
   displayName: 'SRCCLR'
 
