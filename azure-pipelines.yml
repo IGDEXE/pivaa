@@ -42,3 +42,22 @@ steps:
     importResults: true
     failBuildOnPolicyFail: true
   displayName: 'SAST'
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Configuracoes
+      urlPipeScan="https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip"
+      veracodeID="$(APIID)"
+      veracodeAPIkey="$(APIKEY)"
+      caminhoArquivo="**.apk"
+      
+      # Faz o download da ferramenta
+      curl -o pipescan.zip $urlPipeScan
+      # Descompacta a ferramenta
+      unzip -o pipescan.zip -d "./"
+      # Faz a analise
+      java -jar "pipeline-scan.jar" -f "$caminhoArquivo" -vid $veracodeID -vkey $veracodeAPIkey
+    workingDirectory: '$(Build.ArtifactStagingDirectory)'
+  displayName: 'Pipeline Scan'
