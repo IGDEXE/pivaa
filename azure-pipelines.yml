@@ -12,7 +12,7 @@ pool:
 steps:
 - task: Gradle@2
   inputs:
-    gradleWrapperFile: './gradle/wrapper/gradle-wrapper.properties'
+    gradleWrapperFile: 'build.gradle'
     tasks: 'assembleDebug'
     publishJUnitResults: false
     javaHomeOption: 'JDKVersion'
