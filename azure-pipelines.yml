@@ -24,7 +24,8 @@ steps:
     targetType: 'inline'
     script: |
       # curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan "$(Agent.BuildDirectory)" --allow-dirty
-      curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan -url "https://github.com/IGDEXE/pivaa"
+      #curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan -url "https://github.com/IGDEXE/pivaa"
+      curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan -url "https://github.com/IGDEXE/pivaa" "$(Agent.BuildDirectory)" --allow-dirty
   displayName: 'SRCCLR'
 
 - task: Veracode@3
