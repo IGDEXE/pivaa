@@ -31,7 +31,7 @@ steps:
     apiKey: '$(APIKEY)'
     veracodeAppProfile: 'IGDEXE.Pivaa'
     version: '$(build.buildNumber)'
-    filepath: '$(system.defaultworkingdirectory)/apks/$(caminhoAPK)'
+    filepath: '$(system.defaultworkingdirectory)/apks/pivaa.apk'
     createSandBox: false
     createProfile: true
     failTheBuildIfVeracodeScanDidNotInitiate: false
