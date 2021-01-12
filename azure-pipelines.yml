@@ -10,6 +10,11 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'rm -rf local.properties'
+  displayName: 'Removendo Local Properties'
 - task: Gradle@2
   inputs:
     gradleWrapperFile: './gradle/wrapper/gradle-wrapper.properties'
