@@ -18,3 +18,27 @@ steps:
     javaHomeOption: 'JDKVersion'
     gradleOptions: '-Xmx3072m'
     sonarQubeRunAnalysis: false
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+       curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan "$(Build.ArtifactStagingDirectory)/**.apk"
+      #curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan -url "https://github.com/IGDEXE/NodeGoat"
+  displayName: 'SRCCLR'
+
+- task: Veracode@3
+  inputs:
+    ConnectionDetailsSelection: 'Credentials'
+    apiId: '$(APIID)'
+    apiKey: '$(APIKEY)'
+    veracodeAppProfile: 'IGDEXE.Pivaa'
+    version: '$(build.buildNumber)'
+    filepath: '$(Build.ArtifactStagingDirectory)/**.apk'
+    createSandBox: false
+    createProfile: true
+    failTheBuildIfVeracodeScanDidNotInitiate: false
+    scanStatusCheckInterval: '60'
+    importResults: true
+    failBuildOnPolicyFail: true
+  displayName: 'SAST'
