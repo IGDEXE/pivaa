@@ -49,7 +49,7 @@ steps:
       export SRCCLR_SCM_REV=$(build.buildNumber)
       #curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --allow-dirty
       curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan -url "https://github.com/IGDEXE/pivaa"
-    workingDirectory: '$(system.defaultworkingdirectory)/apks'
+    workingDirectory: '$(system.defaultworkingdirectory)'
   displayName: 'SRCCLR'
 
 - task: Bash@3
