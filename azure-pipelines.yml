@@ -57,6 +57,26 @@ steps:
     targetType: 'inline'
     script: |
       # Configuracoes
+      urlDownloadAPI="https://search.maven.org/remotecontent?filepath=com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/20.12.7.3/vosp-api-wrappers-java-20.12.7.3-dist.zip"
+      veracodeID="$(APIID)"
+      veracodeAPIkey="$(APIKEY)"
+      appID="$(APPID)"
+      caminhoArquivo="$(system.defaultworkingdirectory)/apks/pivaa.apk"
+      numeroVersao=$(date +%H%M%s%d%m%y)
+      
+      # Faz o download da ferramenta
+      curl -o veracodeAPI.zip $urlDownloadAPI
+      # Descompacta a ferramenta
+      unzip -o veracodeAPI.zip -d "./"
+      # Utiliza a ferramenta
+      java -jar VeracodeJavaAPI.jar -vid $veracodeID -vkey $veracodeAPIkey -action UploadAndScanByAppId -appid "$appID" -filepath "$caminhoArquivo" -version $numeroVersao
+  displayName: 'Wrapper UploadAndScanByAppId'
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Configuracoes
       urlPipeScan="https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip"
       veracodeID="$(APIID)"
       veracodeAPIkey="$(APIKEY)"
