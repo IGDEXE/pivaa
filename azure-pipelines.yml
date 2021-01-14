@@ -57,7 +57,6 @@ steps:
     targetType: 'inline'
     script: |
       # Configuracoes
-      urlDownloadAPI="https://search.maven.org/remotecontent?filepath=com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/20.12.7.3/vosp-api-wrappers-java-20.12.7.3-dist.zip"
       veracodeID="$(APIID)"
       veracodeAPIkey="$(APIKEY)"
       appID="$(APPID)"
@@ -70,6 +69,7 @@ steps:
       unzip -o veracodeAPI.zip -d "./"
       # Utiliza a ferramenta
       java -jar VeracodeJavaAPI.jar -vid $veracodeID -vkey $veracodeAPIkey -action UploadAndScanByAppId -appid "$appID" -filepath "$caminhoArquivo" -version $numeroVersao
+    workingDirectory: '$(system.defaultworkingdirectory)/VeracodeTools'
   displayName: 'Wrapper UploadAndScanByAppId'
 
 - task: Bash@3
