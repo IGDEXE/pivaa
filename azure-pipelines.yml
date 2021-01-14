@@ -63,10 +63,6 @@ steps:
       caminhoArquivo="$(system.defaultworkingdirectory)/apks/pivaa.apk"
       numeroVersao=$(date +%H%M%s%d%m%y)
       
-      # Faz o download da ferramenta
-      curl -o veracodeAPI.zip $urlDownloadAPI
-      # Descompacta a ferramenta
-      unzip -o veracodeAPI.zip -d "./"
       # Utiliza a ferramenta
       java -jar VeracodeJavaAPI.jar -vid $veracodeID -vkey $veracodeAPIkey -action UploadAndScanByAppId -appid "$appID" -filepath "$caminhoArquivo" -version $numeroVersao
     workingDirectory: '$(system.defaultworkingdirectory)/VeracodeTools'
