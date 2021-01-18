@@ -1,7 +1,7 @@
-# Android
-# Build your Android project with Gradle.
-# Add steps that test, sign, and distribute the APK, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/android
+# PIVAA - Android
+# Pipeline para teste do Wrapper na validação de um APK
+# Para saber mais sobre o Wrapper, recomendo o artigo: 
+# https://igd753.medium.com/veracode-como-usar-o-wrapper-para-analisar-arquivos-ab10716dabc7
 
 trigger:
 - main
@@ -10,6 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
+# Faz a instalação do Wrapper
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
@@ -20,7 +21,6 @@ steps:
       # Verifica se o Wrapper ja esta configurado
       try {
           VeracodeAPI.exe
-          Clear-Host
           Write-Host "Wrapper ja esta configurado"
       }
       catch {
@@ -37,7 +37,6 @@ steps:
                Write-Host "Adicionando ao Path do sistema"
                $novoPath = $env:Path + ";$Env:Programfiles/Veracode/API/.NET"
                Write-Host "##vso[task.setvariable variable=PATH;]$novoPath"
-               #[Environment]::SetEnvironmentVariable("Path", $env:Path + ";$Env:Programfiles/Veracode/API/.NET")
                Write-Host "Procedimento de configuracao concluido" 
            }
            catch {
@@ -48,6 +47,7 @@ steps:
       }
   displayName: 'Configurando Wrapper'
 
+# Faz o Uploud do arquivo sem iniciar um scan
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
@@ -73,6 +73,7 @@ steps:
       }
   displayName: 'Uploud File'
 
+# Faz um uploud e inicia o Scan
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
@@ -108,6 +109,7 @@ steps:
       }
   displayName: 'Uploud and Scan'
 
+# Aguarda a publicação do resultado e exibe um pequeno relatorio
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
