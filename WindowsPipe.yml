@@ -14,9 +14,6 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      # Fazer download e configurar a API do Veracode para C#
-      # Ivo Dias
-      
       # Configuracoes
       $urlDownloadAPI = "https://tools.veracode.com/integrations/API-Wrappers/C%23/bin/VeracodeC%23API.zip"
       
@@ -38,7 +35,8 @@ steps:
                Rename-Item -Path "$Env:Programfiles/Veracode/API/.NET/VeracodeC#API.exe" -NewName "$Env:Programfiles/Veracode/API/.NET/VeracodeAPI.exe"
                # Adiciona o EXE ao caminho do Path do sistema
                Write-Host "Adicionando ao Path do sistema"
-               Write-Host "##vso[task.setvariable variable=caminhoWrapper;]$Env:Programfiles/Veracode/API/.NET"
+               $novoPath = $env:Path + ";$Env:Programfiles/Veracode/API/.NET"
+               Write-Host "##vso[task.setvariable variable=PATH;]$novoPath"
                #[Environment]::SetEnvironmentVariable("Path", $env:Path + ";$Env:Programfiles/Veracode/API/.NET")
                Write-Host "Procedimento de configuracao concluido" 
            }
@@ -72,7 +70,7 @@ steps:
               Write-Host "$(Get-Date -Format 'dd-MM-yyyy HH:mm:ss') | Perfil do aplicativo localizado com ID: $appID"
               # Faz o Uploud and Scan
               Write-Host "Iniciando Upload and Scan"
-              $(caminhoWrapper)/VeracodeAPI.exe -vid $(veracodeID) -vkey $(veracodeAPIkey) -action UploadAndScanByAppId -appid "$appID" -filepath "$(caminhoArquivo)" -version $numeroVersao
+              VeracodeAPI.exe -vid $(veracodeID) -vkey $(veracodeAPIkey) -action UploadAndScanByAppId -appid "$appID" -filepath "$(caminhoArquivo)" -version $numeroVersao
               Write-Host "Procedimento concluido"
           } else {
               Write-Host "Não foi encontrado um App ID para o $(veracodeAppName)"
