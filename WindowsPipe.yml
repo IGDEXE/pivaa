@@ -14,6 +14,42 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      # Configuracoes
+      $urlDownloadAPI = "https://tools.veracode.com/integrations/API-Wrappers/C%23/bin/VeracodeC%23API.zip"
+      
+      # Verifica se o Wrapper ja esta configurado
+      try {
+          VeracodeAPI.exe
+          Clear-Host
+          Write-Host "Wrapper ja esta configurado"
+      }
+      catch {
+          try {
+              # Faz o download
+               Write-Host "Fazendo o download da ferramenta"
+               Invoke-WebRequest -Uri "$urlDownloadAPI" -OutFile "$env:LOCALAPPDATA/VeracodeAPI.zip"
+               # Descompacta o arquivo
+               Write-Host "Descompactando.."
+               Expand-Archive -Path "$env:LOCALAPPDATA/VeracodeAPI.zip" -DestinationPath "$Env:Programfiles/Veracode/API/.NET"
+               # Altera o nome do arquivo
+               Rename-Item -Path "$Env:Programfiles/Veracode/API/.NET/VeracodeC#API.exe" -NewName "$Env:Programfiles/Veracode/API/.NET/VeracodeAPI.exe"
+               # Adiciona o EXE ao caminho do Path do sistema
+               Write-Host "Adicionando ao Path do sistema"
+               [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$Env:Programfiles/Veracode/API/.NET")
+               Write-Host "Procedimento de configuracao concluido" 
+           }
+           catch {
+               $ErrorMessage = $_.Exception.Message # Recebe o erro
+               Write-Host "Erro ao fazer a configuracao da API"
+               Write-Host "$ErrorMessage"
+           }
+      }
+  displayName: 'Configurando Wrapper'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
       # Recebe o App ID com base no nome da aplicacao dentro do Veracode
       [xml]$INFO = $(VeracodeAPI.exe -vid "$(veracodeID)" -vkey "$(veracodeAPIkey)" -action GetAppList | Select-String -Pattern $(veracodeAppName))
       # Filtra o App ID
