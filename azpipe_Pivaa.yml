@@ -1,0 +1,66 @@
+# Pivaa - Android
+
+trigger:
+- main
+
+variables:
+- name: caminhoPacote
+  value: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+- name: veracodeAppProfile
+  value: AzDevOps.$(Build.DefinitionName)
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'rm -rf local.properties'
+  displayName: 'Removendo Local Properties'
+- task: Gradle@2
+  inputs:
+    gradleWrapperFile: './gradle/wrapper/gradle-wrapper.properties'
+    tasks: 'assembleDebug'
+    publishJUnitResults: false
+    javaHomeOption: 'JDKVersion'
+    gradleOptions: '-Xmx512m'
+    sonarQubeRunAnalysis: false
+  displayName: 'Gradle - Build'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Agent.BuildDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(caminhoPacote)'
+    replaceExistingArchive: true
+  displayName: 'Criando pacote para analise'
+
+- task: Veracode@3
+  inputs:
+    ConnectionDetailsSelection: 'Credentials'
+    apiId: '$(APIID)'
+    apiKey: '$(APIKEY)'
+    veracodeAppProfile: '$(veracodeAppProfile)'
+    version: '$(build.buildNumber)'
+    filepath: '$(caminhoPacote)'
+    createSandBox: false
+    createProfile: true
+    failTheBuildIfVeracodeScanDidNotInitiate: true
+    importResults: true
+    failBuildOnPolicyFail: false
+  displayName: 'SAST'
+
+- task: Veracode Flaw Importer@3
+  inputs:
+    ConnectionDetailsSelection: 'Credentials'
+    apiId: '$(APIID)'
+    apiKey: '$(APIKEY)'
+    veracodeAppProfile: '$(veracodeAppProfile)'
+    sandboxName: 
+    importType: 'All Flaws'
+    workItemType: 'Issue'
+    area: '$(system.teamProject)'
+    flawImportLimit: '1000'
+  displayName: 'Importando relatorio'
