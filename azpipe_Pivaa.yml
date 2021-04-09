@@ -5,7 +5,7 @@ trigger:
 
 variables:
 - name: caminhoPacote
-  value: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+  value: $(system.defaultworkingdirectory)/apks/pivaa.apk
 - name: veracodeAppProfile
   value: AzDevOps.$(Build.DefinitionName)
 
